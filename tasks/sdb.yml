@@ -1,0 +1,30 @@
+---
+- name: Creating software database
+  become: true
+  file:
+    path: /etc/sdb.yml
+    mode: 0755
+    state: touch
+  register: _sdb
+  changed_when: _sdb.diff.before.state == "absent"
+
+- name: Loading sdb.yml
+  slurp:
+    src: /etc/sdb.yml
+  register: sdb_yml
+
+- name: Loading software database
+  set_fact:
+    sdb: "{{ sdb_yml.content | b64decode | from_yaml }}"
+
+- name: Creating software entry
+  set_fact:
+    sentry: |
+      {
+        "{{ src_path }}": {
+          "name": "{{ _name }}",
+          "version": "{{ version }}",
+          "prefix": "{{ prefix }}",
+          "owner": ""
+        }
+      }

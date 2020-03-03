@@ -1,0 +1,52 @@
+---
+_name: tmux
+version: 2.9
+prefix: /usr/local
+src_path: "{{ prefix }}/src/{{ _name }}"
+
+dependencies:
+  Archlinux:
+    - base-devel
+    - ncurses
+    - libevent
+  Debian-family:
+    - build-essential
+    - autoconf
+    - libncurses-dev
+    - libevent-dev
+    - pkg-config
+  RedHat-family:
+    - "@Development Tools"
+    - ncurses-devel
+    - libevent
+    - libevent-devel
+    - pkgconfig
+
+fetch:
+  # yamllint disable-line rule:line-length
+  url: https://github.com/tmux/tmux/releases/download/{{ version }}/tmux-{{ version }}.tar.gz
+  extra_opts:
+    - --strip-components=1
+
+# clone:
+#   repo: https://github.com/tmux/tmux.git
+
+# prepare:
+#   shell: |
+#     sh autogen.sh
+
+build:
+  shell: |
+    ./configure \
+    --prefix={{ prefix }}
+    make -j4
+
+install:
+  shell: |
+    make install
+  creates: "{{ prefix }}/bin/{{ _name }}"
+
+uninstall:
+  shell: |
+    make uninstall
+  removes: "{{ prefix }}/bin/{{ _name }}"

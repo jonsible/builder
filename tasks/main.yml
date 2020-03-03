@@ -1,0 +1,129 @@
+---
+- name: Including software database manager
+  include_tasks: sdb.yml
+
+- name: Updating cache
+  become: true
+  package:
+    update_cache: true
+  tags:
+    - molecule-idempotence-notest
+    - dependencies
+
+- name: Installing dependencies (all)
+  become: true
+  package:
+    name: "{{ dependencies.all }}"
+  when: dependencies.all is defined
+  tags:
+    - dependencies
+
+- name: Installing Dependencies (os_family)
+  become: true
+  package:
+    name: "{{ dependencies[ansible_os_family + '-family'] }}"
+  when: dependencies[ansible_os_family + '-family'] is defined
+  tags:
+    - dependencies
+
+- name: Installing Dependencies (distribution)
+  become: true
+  package:
+    name: "{{ dependencies[ansible_distribution] }}"
+  when: dependencies[ansible_distribution] is defined
+  tags:
+    - dependencies
+
+- name: Installing git
+  become: true
+  package:
+    name: git
+  when: clone is defined
+  tags:
+    - dependencies
+
+- name: Checking if installation exists
+  stat:
+    path: "{{ src_path }}"
+  register: install_src
+
+- name: Uninstalling
+  block:
+    - name: Uninstalling
+      shell: "{{ uninstall.shell }}"
+      args:
+        warn: false
+        chdir: "{{ src_path }}"
+      tags:
+        - molecule-idempotence-notest
+
+    - name: Removing source
+      become: true
+      file:
+        path: "{{ src_path }}/"
+        state: absent
+      tags:
+        - molecule-idempotence-notest
+  when:
+    - sdb[src_path] is defined
+    - sdb[src_path]['version'] is version(version, '!=')
+    - install_src.stat.exists
+
+- name: Downloading source
+  block:
+    - name: From git
+      become: true
+      git:
+        repo: "{{ clone.repo }}"
+        dest: "{{ src_path }}/"
+        update: true
+        version: "{{ version }}"
+      when: clone is defined
+
+    - name: Creating src dir
+      become: true
+      file:
+        path: "{{ src_path }}/"
+        state: directory
+
+    - name: From archive
+      become: true
+      unarchive:
+        src: "{{ fetch.url }}"
+        dest: "{{ src_path }}/"
+        extra_opts: "{{ fetch.extra_opts }}"
+        remote_src: true
+      when: fetch is defined
+  when: (clone is defined) != (fetch is defined)
+
+- name: Preparing
+  become: true
+  shell: "{{ prepare.shell }}"
+  args:
+    warn: false
+    chdir: "{{ src_path }}"
+  when: prepare is defined
+  changed_when: false
+
+- name: Building
+  become: true
+  shell: "{{ build.shell }}"
+  args:
+    warn: false
+    chdir: "{{ src_path }}"
+  register: _build
+  changed_when: false
+
+- name: Installing
+  become: true
+  shell: "{{ install.shell }}"
+  args:
+    warn: false
+    chdir: "{{ src_path }}"
+    creates: "{{ install.creates }}"
+
+- name: Saving the software database
+  become: true
+  copy:
+    content: "{{ sdb | dict_merge(sentry) | to_nice_yaml }}"
+    dest: /etc/sdb.yml
