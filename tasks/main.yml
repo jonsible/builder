@@ -50,7 +50,7 @@
 - name: Uninstalling
   block:
     - name: Uninstalling
-      shell: "{{ uninstall.shell }}"
+      shell: "{{ uninstall.shell }}"  # noqa 305
       args:
         warn: false
         chdir: "{{ src_path }}"
@@ -98,7 +98,7 @@
 
 - name: Preparing
   become: true
-  shell: "{{ prepare.shell }}"
+  shell: "{{ prepare.shell }}"  # noqa 305
   args:
     warn: false
     chdir: "{{ src_path }}"
@@ -107,7 +107,7 @@
 
 - name: Building
   become: true
-  shell: "{{ build.shell }}"
+  shell: "{{ build.shell }}"  # noqa 305
   args:
     warn: false
     chdir: "{{ src_path }}"
@@ -116,7 +116,7 @@
 
 - name: Installing
   become: true
-  shell: "{{ install.shell }}"
+  shell: "{{ install.shell }}"  # noqa 305
   args:
     warn: false
     chdir: "{{ src_path }}"
