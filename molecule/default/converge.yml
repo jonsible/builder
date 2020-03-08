@@ -1,13 +1,12 @@
 ---
 - name: Converge
   hosts: all
-  vars_files:
-    - buildspec.yml
   tasks:
     - include_role:
         name: jonsible.filter_plugins
 
-    - include_vars:
+    - name: Include buildspecs
+      include_vars:
         file: buildspec.yml
 
     - include_role:

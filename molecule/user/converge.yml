@@ -11,7 +11,8 @@
         name: "jscherrerl"
         shell: /bin/bash
 
-    - include_vars:
+    - name: Include buildspecs
+      include_vars:
         file: ../default/buildspec.yml
 
     - include_role:
