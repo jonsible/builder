@@ -1,0 +1,56 @@
+---
+- name: Installing git
+  become: true
+  package:
+    name: git
+  when: clone is defined
+  tags:
+    - dependencies
+
+- name: Installing build dependencies (all)
+  become: true
+  package:
+    name: "{{ dependencies.build.all }}"
+  when: dependencies.build.all is defined
+  tags:
+    - dependencies
+
+- name: Installing build dependencies (os_family)
+  become: true
+  package:
+    name: "{{ dependencies['build'][ansible_os_family + '-family'] }}"
+  when: dependencies['build'][ansible_os_family + '-family'] is defined
+  tags:
+    - dependencies
+
+- name: Installing build dependencies (distribution)
+  become: true
+  package:
+    name: "{{ dependencies['build'][ansible_distribution] }}"
+  when: dependencies['build'][ansible_distribution] is defined
+  tags:
+    - dependencies
+
+- name: Installing run dependencies (all)
+  become: true
+  package:
+    name: "{{ dependencies.run.all }}"
+  when: dependencies.run.all is defined
+  tags:
+    - dependencies
+
+- name: Installing run dependencies (os_family)
+  become: true
+  package:
+    name: "{{ dependencies['run'][ansible_os_family + '-family'] }}"
+  when: dependencies['run'][ansible_os_family + '-family'] is defined
+  tags:
+    - dependencies
+
+- name: Installing run dependencies (distribution)
+  become: true
+  package:
+    name: "{{ dependencies['run'][ansible_distribution] }}"
+  when: dependencies['run'][ansible_distribution] is defined
+  tags:
+    - dependencies

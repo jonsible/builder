@@ -26,12 +26,16 @@ owner: root
 prefix: /usr/local
 
 dependencies:
-  Archlinux:
-    - base-devel
-  Debian-family:
-    - build-essential
-  RedHat-family:
-    - "@Development Tools"
+  build:
+    Archlinux:
+      - base-devel
+    Debian-family:
+      - build-essential
+    RedHat-family:
+      - "@Development Tools"
+  run:
+    Archlinux:
+      - libevent
 
 # Clone and Fetch mutually exclusive
 clone:

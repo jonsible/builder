@@ -6,22 +6,26 @@ owner: root
 src_path: "{{ prefix }}/src/{{ _name }}"
 
 dependencies:
-  Archlinux:
-    - base-devel
-    - ncurses
-    - libevent
-  Debian-family:
-    - build-essential
-    - autoconf
-    - libncurses-dev
-    - libevent-dev
-    - pkg-config
-  RedHat-family:
-    - "@Development Tools"
-    - ncurses-devel
-    - libevent
-    - libevent-devel
-    - pkgconfig
+  build:
+  run:
+    Archlinux:
+      - base-devel
+      - ncurses
+      - libevent
+      - libutempter
+    Debian-family:
+      - build-essential
+      - autoconf
+      - libncurses-dev
+      - libevent-dev
+      - pkg-config
+    RedHat-family:
+      - "@Development Tools"
+      - ncurses-devel
+      - libevent
+      - libevent-devel
+      - pkgconfig
+
 
 fetch:
   # yamllint disable-line rule:line-length

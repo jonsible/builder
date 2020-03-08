@@ -18,37 +18,8 @@
     - molecule-idempotence-notest
     - dependencies
 
-- name: Installing dependencies (all)
-  become: true
-  package:
-    name: "{{ dependencies.all }}"
-  when: dependencies.all is defined
-  tags:
-    - dependencies
-
-- name: Installing Dependencies (os_family)
-  become: true
-  package:
-    name: "{{ dependencies[ansible_os_family + '-family'] }}"
-  when: dependencies[ansible_os_family + '-family'] is defined
-  tags:
-    - dependencies
-
-- name: Installing Dependencies (distribution)
-  become: true
-  package:
-    name: "{{ dependencies[ansible_distribution] }}"
-  when: dependencies[ansible_distribution] is defined
-  tags:
-    - dependencies
-
-- name: Installing git
-  become: true
-  package:
-    name: git
-  when: clone is defined
-  tags:
-    - dependencies
+- name: Installing dependencies
+  include_tasks: deps.yml
 
 - name: Checking if installation exists
   stat:
@@ -149,3 +120,9 @@
     attributes: +i
   tags:
     - molecule-notest
+
+- name: Removing build dependencies
+  include_tasks: rm-deps.yml
+  tags:
+    - molecule-notest
+    - dependencies
