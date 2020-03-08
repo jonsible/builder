@@ -1,12 +1,19 @@
 ---
+- name: Stat software database
+  become: true
+  stat:
+    path: /etc/sdb.yml
+  register: _sdb
+
 - name: Creating software database
   become: true
   file:
     path: /etc/sdb.yml
     mode: 0755
     state: touch
-  register: _sdb
-  changed_when: _sdb.diff.before.state == "absent"
+  # register: _sdb
+  when: not _sdb.stat.exists
+  # changed_when: _sdb.diff.before.state == "absent"
 
 - name: Loading sdb.yml
   slurp:
@@ -25,6 +32,6 @@
           "name": "{{ _name }}",
           "version": "{{ version }}",
           "prefix": "{{ prefix }}",
-          "owner": ""
+          "owner": "{{ owner }}"
         }
       }

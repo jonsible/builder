@@ -2,6 +2,7 @@
 _name: tmux
 version: 2.9
 prefix: /usr/local
+owner: root
 src_path: "{{ prefix }}/src/{{ _name }}"
 
 dependencies:

@@ -1,4 +1,12 @@
 ---
+- name: Sdb immutable off
+  become: true
+  file:
+    path: /etc/sdb.yml
+    attributes: -i
+  tags:
+    - molecule-notest
+
 - name: Including software database manager
   include_tasks: sdb.yml
 
@@ -73,6 +81,7 @@
   block:
     - name: From git
       become: true
+      become_user: "{{ owner }}"
       git:
         repo: "{{ clone.repo }}"
         dest: "{{ src_path }}/"
@@ -82,12 +91,14 @@
 
     - name: Creating src dir
       become: true
+      become_user: "{{ owner }}"
       file:
         path: "{{ src_path }}/"
         state: directory
 
     - name: From archive
       become: true
+      become_user: "{{ owner }}"
       unarchive:
         src: "{{ fetch.url }}"
         dest: "{{ src_path }}/"
@@ -98,6 +109,7 @@
 
 - name: Preparing
   become: true
+  become_user: "{{ owner }}"
   shell: "{{ prepare.shell }}"  # noqa 305
   args:
     warn: false
@@ -107,6 +119,7 @@
 
 - name: Building
   become: true
+  become_user: "{{ owner }}"
   shell: "{{ build.shell }}"  # noqa 305
   args:
     warn: false
@@ -116,6 +129,7 @@
 
 - name: Installing
   become: true
+  become_user: "{{ owner }}"
   shell: "{{ install.shell }}"  # noqa 305
   args:
     warn: false
@@ -127,3 +141,11 @@
   copy:
     content: "{{ sdb | dict_merge(sentry) | to_nice_yaml }}"
     dest: /etc/sdb.yml
+
+- name: Sdb immutable on
+  become: true
+  file:
+    path: /etc/sdb.yml
+    attributes: +i
+  tags:
+    - molecule-notest

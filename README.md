@@ -22,6 +22,7 @@ You will have to specify build specs like this
 ```yaml
 _name: tmux
 version: 2.9
+owner: root
 prefix: /usr/local
 
 dependencies:
