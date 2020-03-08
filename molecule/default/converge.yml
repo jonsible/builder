@@ -7,5 +7,9 @@
     - include_role:
         name: jonsible.filter_plugins
 
+    - include_vars:
+        file: buildspec.yml
+
     - include_role:
         name: builder
+        tasks_from: builder.yml

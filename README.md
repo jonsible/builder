@@ -91,8 +91,13 @@ None
 Install builder with the default settings
 ```yaml
 - hosts: all
-  roles:
-     - role: jonsible.builder
+  tasks:
+    - include_vars: buildspec.yml
+
+    - include_role:
+        name: jonsible.builder
+        tasks_from: builder.yml
+
 ```
 
 ## License

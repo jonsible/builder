@@ -20,3 +20,14 @@ widely recommended `'--user' flag`_ when invoking ``pip``.
 .. code-block:: bash
 
     $ pip install 'molecule[docker]'
+    $ sudo apt-get -y install python-pip libssl-dev
+    $ pip install --upgrade setuptools
+    $ pip install ansible-lint
+    $ pip install flake8
+    $ pip install testinfra
+    $ pip install molecule
+    $ pip install molecule[docker]
+    $ WDIR=$(pwd)
+    $ cd /opt
+    $ curl -L https://networkgenomics.com/try/mitogen-0.2.9.tar.gz | tar -xz
+    $ cd $WDIR

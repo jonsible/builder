@@ -1,8 +1,6 @@
 ---
 - name: Converge
   hosts: all
-  vars_files:
-    - ../default/buildspec.yml
   tasks:
     - include_role:
         name: jonsible.filter_plugins
@@ -13,8 +11,12 @@
         name: "jscherrerl"
         shell: /bin/bash
 
+    - include_vars:
+        file: ../default/buildspec.yml
+
     - include_role:
         name: builder
+        tasks_from: builder.yml
       vars:
         owner: jscherrerl
         prefix: /home/jscherrerl/.local
