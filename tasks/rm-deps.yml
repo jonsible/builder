@@ -1,5 +1,5 @@
 ---
-- name: Installing build dependencies (all)
+- name: Removing build dependencies (all)
   become: true
   package:
     name: "{{ dependencies.build.all }}"
@@ -8,7 +8,7 @@
   tags:
     - dependencies
 
-- name: Installing build dependencies (os_family)
+- name: Removing build dependencies (os_family)
   become: true
   package:
     name: "{{ dependencies['build'][ansible_os_family + '-family'] }}"
@@ -17,7 +17,7 @@
   tags:
     - dependencies
 
-- name: Installing build dependencies (distribution)
+- name: Removing build dependencies (distribution)
   become: true
   package:
     name: "{{ dependencies['build'][ansible_distribution] }}"

@@ -1,1 +1,2 @@
 ---
+src_path: "{{ prefix }}/src/{{ _name }}"

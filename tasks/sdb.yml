@@ -11,9 +11,7 @@
     path: /etc/sdb.yml
     mode: 0755
     state: touch
-  # register: _sdb
   when: not _sdb.stat.exists
-  # changed_when: _sdb.diff.before.state == "absent"
 
 - name: Loading sdb.yml
   slurp:
